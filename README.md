@@ -1,9 +1,8 @@
-# Module name: Materials
-
-> __TODO:__ Create a new repo from this template, create the requisite versions/x.x branch, add the relevant team with Write access, and update references in this readme as appropriate.
+# Vision Framework: Materials
 
 
-This repo contains all the downloadable materials and projects associated with the **MODULE** module in:
+
+This repo contains all the downloadable materials and projects associated with the **Vision Framework** module in:
 
 ### [Course](https://www.kodeco.com/library)
 
@@ -17,4 +16,4 @@ Each edition has its own branch, named `versions/[VERSION]`. The default branch 
 
 | Branch                                                                                  | Version | Release Date |
 | --------------------------------------------------------------------------------------- |:-------:|:------------:|
-| [versions/1.0](https://github.com/kodecocodes/m3-TODO-materials/tree/versions/1.0) | 1.0     | YYYY-MM-DD   |
+| [versions/1.0](https://github.com/kodecocodes/m3-vfr-materials/tree/versions/1.0) | 1.0     | YYYY-MM-DD   |
