@@ -33,25 +33,23 @@
 import SwiftUI
 import Vision
 
-
 class TextDetectionViewModel: ObservableObject {
   @Published var textRectangles: [(CGRect, String)] = []
   @Published var currentIndex: Int = 0
   @Published var maxTextHeight: CGFloat = 0
-
+  
   // Shared PhotoPickerViewModel
   @Published var photoPickerViewModel: PhotoPickerViewModel
-
-
+  
   init(photoPickerViewModel: PhotoPickerViewModel) {
     self.photoPickerViewModel = photoPickerViewModel
   }
-
+  
   @MainActor func detectText() {
     currentIndex = 0
-
+    
     guard let image = photoPickerViewModel.selectedPhoto?.image else { return }
-
+    
     let textDetectionRequest = VNRecognizeTextRequest { [weak self] request, error in
       if let error = error {
         print("Text detection error: \(error)")
@@ -60,45 +58,45 @@ class TextDetectionViewModel: ObservableObject {
       self?.textRectangles = []
       //Process the observations
     }
-
+    
     textDetectionRequest.recognitionLevel = .accurate
 #if targetEnvironment(simulator)
     textDetectionRequest.usesCPUOnly = true
 #endif
     guard let cgImage = image.cgImage else { return }
-
+    
     let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-
+    
     do {
       try handler.perform([textDetectionRequest])
     } catch {
       print("Failed to perform detection: \(error)")
     }
   }
-
+  
   func nextText() {
     if textRectangles.isEmpty { return }
     currentIndex = (currentIndex + 1) % textRectangles.count
   }
-
+  
   func previousText() {
     if textRectangles.isEmpty { return }
     currentIndex = (currentIndex - 1 + textRectangles.count) % textRectangles.count
   }
-
+  
   var currentText: (CGRect, String)? {
     guard !textRectangles.isEmpty else { return nil }
     return textRectangles[currentIndex]
   }
-
+  
   func calculateMaxTextHeight() {
     // Extract all the text strings from textRectangles
     let texts = textRectangles.map { $0.1 }
-
+    
     // This function calculates the max height for the texts
     let maxWidth = UIScreen.main.bounds.width - 32 // Assuming 16pt padding on each side
     let font = UIFont.systemFont(ofSize: 17)
-
+    
     let maxHeight = texts.map { text -> CGFloat in
       let constraintRect = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
       let boundingBox = text.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
@@ -106,11 +104,9 @@ class TextDetectionViewModel: ObservableObject {
       print("Bounding box height: \(boundingBox.height)")
       return boundingBox.height
     }.max() ?? 0
-
+    
     self.maxTextHeight = maxHeight + 32 // Add padding
     print("Calculated max text height: \(self.maxTextHeight)")
   }
-
-
 }
 

@@ -35,7 +35,6 @@ import SwiftUI
 struct ObjectDetectionView: View {
   
   @StateObject var viewModel: ObjectDetectionViewModel
-
   
   var body: some View {
     NavigationStack {
@@ -55,7 +54,6 @@ struct ObjectDetectionView: View {
             .font(.title)
             .padding()
           
-          
           Spacer()
           
           Button("Classify Image") {
@@ -69,5 +67,3 @@ struct ObjectDetectionView: View {
     }
   }
 }
-
-

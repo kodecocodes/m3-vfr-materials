@@ -34,19 +34,15 @@ import SwiftUI
 
 struct TextDetectionView: View {
   @StateObject var viewModel: TextDetectionViewModel
-
+  
   var body: some View {
     NavigationStack {
       VStack {
         if let image = viewModel.photoPickerViewModel.selectedPhoto?.image.drawVisionRect(viewModel.currentText?.0) {
-
-
-              Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-
-
-
+          
+          Image(uiImage: image)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
           
           Spacer()
           if let (_, text) = viewModel.currentText {
@@ -81,5 +77,3 @@ struct TextDetectionView: View {
     .padding()
   }
 }
-
-
