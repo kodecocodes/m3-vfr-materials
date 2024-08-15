@@ -29,6 +29,7 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
+
 import SwiftUI
 import Combine
 import Vision
@@ -40,15 +41,14 @@ class ImageViewModel: ObservableObject {
   @Published var faceRectangles: [CGRect] = []
   @Published var currentIndex: Int = 0
   @Published var errorMessage: String? = nil
-
+  
   // Shared PhotoPickerViewModel
   @Published var photoPickerViewModel: PhotoPickerViewModel
-
-
+  
   init(photoPickerViewModel: PhotoPickerViewModel) {
     self.photoPickerViewModel = photoPickerViewModel
   }
-
+  
   @MainActor func detectFaces() {
     currentIndex = 0
     guard let image = photoPickerViewModel.selectedPhoto?.image else {
@@ -57,14 +57,14 @@ class ImageViewModel: ObservableObject {
       }
       return
     }
-
+    
     guard let cgImage = image.cgImage else {
       DispatchQueue.main.async {
         self.errorMessage = "Failed to convert UIImage to CGImage"
       }
       return
     }
-
+    
     let faceDetectionRequest = VNDetectFaceRectanglesRequest { [weak self] request, error in
       if let error = error {
         DispatchQueue.main.async {
@@ -72,17 +72,16 @@ class ImageViewModel: ObservableObject {
         }
         return
       }
-
-
+      
       //process the results
     }
-
+    
 #if targetEnvironment(simulator)
     faceDetectionRequest.usesCPUOnly = true
 #endif
-
+    
     let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
-
+    
     do {
       try handler.perform([faceDetectionRequest])
     } catch {
@@ -91,24 +90,19 @@ class ImageViewModel: ObservableObject {
       }
     }
   }
-
+  
   func nextFace() {
     if faceRectangles.isEmpty { return }
     currentIndex = (currentIndex + 1) % faceRectangles.count
   }
-
+  
   func previousFace() {
     if faceRectangles.isEmpty { return }
     currentIndex = (currentIndex - 1 + faceRectangles.count) % faceRectangles.count
   }
-
+  
   var currentFace: CGRect? {
     guard !faceRectangles.isEmpty else { return nil }
     return faceRectangles[currentIndex]
   }
 }
-
-
-
-
-

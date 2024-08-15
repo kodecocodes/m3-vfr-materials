@@ -39,12 +39,11 @@ class ObjectDetectionViewModel: ObservableObject {
   
   // Shared PhotoPickerViewModel
   @Published var photoPickerViewModel: PhotoPickerViewModel
-
-
+  
   init(photoPickerViewModel: PhotoPickerViewModel) {
     self.photoPickerViewModel = photoPickerViewModel
   }
-
+  
   @MainActor func classifyImage() {
     guard let image = photoPickerViewModel.selectedPhoto?.image, let cgImage = image.cgImage else {
       return
@@ -59,12 +58,12 @@ class ObjectDetectionViewModel: ObservableObject {
     request.usesCPUOnly = true
 #endif
     //What animals does the model know about
-//    if let animals = try? request.supportedIdentifiers() {
-//      for animal in animals {
-//        logger.debug("Animal: \(animal.rawValue)")
-//      }
-//    }
-
+    //    if let animals = try? request.supportedIdentifiers() {
+    //      for animal in animals {
+    //        logger.debug("Animal: \(animal.rawValue)")
+    //      }
+    //    }
+    
     let handler = VNImageRequestHandler(cgImage: cgImage, options: [:])
     do {
       try handler.perform([request])
@@ -74,4 +73,3 @@ class ObjectDetectionViewModel: ObservableObject {
     }
   }
 }
-

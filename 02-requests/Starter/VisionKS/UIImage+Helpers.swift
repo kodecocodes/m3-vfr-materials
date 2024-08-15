@@ -35,100 +35,97 @@ import Vision
 import OSLog
 
 extension UIImage {
-
-
-    /// Draws a vision rectangle on the image, adjusting for the image's orientation.
-    ///
-    /// This method is the main point of access, allowing you to draw a red rectangle on the image based on a vision rectangle.
-    /// The rectangle's position is corrected based on the image's orientation.
-    ///
-    /// - Parameter visionRect: The rectangle to be drawn, provided in normalized coordinates.
-    /// - Returns: A new `UIImage` with the vision rectangle drawn, or the original image if inputs are invalid.
-    func drawVisionRect(_ visionRect: CGRect?) -> UIImage? {
-
-      logger.debug("Original UIImage has an orientation of: \(self.imageOrientation.rawValue)")
-        // Ensure the image's CGImage representation is available.
-
-      guard let cgImage = self.cgImage else {
-            return nil
-        }
-
-        // If visionRect is not provided, return the original image.
-        guard let visionRect = visionRect else {
-            return self
-        }
-
-        // Prepare the context size based on the image dimensions.
-        let imageSize = CGSize(width: cgImage.width, height: cgImage.height)
-
-        // Begin a new image context with the correct size and scale.
-        UIGraphicsBeginImageContextWithOptions(imageSize, false, self.scale)
-
-        guard let context = UIGraphicsGetCurrentContext() else {
-            return nil
-        }
-
-        // Draw the original image in the context.
-        context.draw(cgImage, in: CGRect(origin: .zero, size: imageSize))
-
-        // Calculate the rectangle using Vision's coordinate system to image coordinates.
-        let correctedRect = VNImageRectForNormalizedRect(visionRect, Int(imageSize.width), Int(imageSize.height))
-
-        // Draw the vision rectangle with a red fill and stroke.
-        UIColor.red.withAlphaComponent(0.3).setFill()
-        let rectPath = UIBezierPath(rect: correctedRect)
-        rectPath.fill()
-
-        UIColor.red.setStroke()
-        rectPath.lineWidth = 2.0
-        rectPath.stroke()
-
-        // Get the resulting image from the current context.
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-
-        // End the image context to free up resources.
-        UIGraphicsEndImageContext()
-      
-        // Adjust the image's orientation before returning.
-        guard let finalCgImage = newImage?.cgImage else {
-            return nil
-        }
-
-        let correctlyOrientedImage = UIImage(
-            cgImage: finalCgImage,
-            scale: self.scale,
-            orientation: self.adjustOrientation()
-        )
-      logger.debug("Final image needs an orientation of \(correctlyOrientedImage.imageOrientation.rawValue) to look right.")
-        return correctlyOrientedImage
+  /// Draws a vision rectangle on the image, adjusting for the image's orientation.
+  ///
+  /// This method is the main point of access, allowing you to draw a red rectangle on the image based on a vision rectangle.
+  /// The rectangle's position is corrected based on the image's orientation.
+  ///
+  /// - Parameter visionRect: The rectangle to be drawn, provided in normalized coordinates.
+  /// - Returns: A new `UIImage` with the vision rectangle drawn, or the original image if inputs are invalid.
+  func drawVisionRect(_ visionRect: CGRect?) -> UIImage? {
+    
+    logger.debug("Original UIImage has an orientation of: \(self.imageOrientation.rawValue)")
+    // Ensure the image's CGImage representation is available.
+    
+    guard let cgImage = self.cgImage else {
+      return nil
     }
-
-    /// Adjusts the orientation of the image based on its current orientation.
-    ///
-    /// This method is private and only accessible within the extension to ensure that it is only used internally.
-    ///
-    /// - Returns: The adjusted orientation that is the mirrored counterpart of the image's current orientation.
-    private func adjustOrientation() -> UIImage.Orientation {
-        switch self.imageOrientation {
-        case .up:
-            return .downMirrored
-        case .upMirrored:
-            return .up
-        case .down:
-            return .upMirrored
-        case .downMirrored:
-            return .down
-        case .left:
-            return .rightMirrored
-        case .rightMirrored:
-            return .left
-        case .right:
-            return .leftMirrored
-        case .leftMirrored:
-            return .right
-        @unknown default:
-            return self.imageOrientation
-        }
+    
+    // If visionRect is not provided, return the original image.
+    guard let visionRect = visionRect else {
+      return self
     }
+    
+    // Prepare the context size based on the image dimensions.
+    let imageSize = CGSize(width: cgImage.width, height: cgImage.height)
+    
+    // Begin a new image context with the correct size and scale.
+    UIGraphicsBeginImageContextWithOptions(imageSize, false, self.scale)
+    
+    guard let context = UIGraphicsGetCurrentContext() else {
+      return nil
+    }
+    
+    // Draw the original image in the context.
+    context.draw(cgImage, in: CGRect(origin: .zero, size: imageSize))
+    
+    // Calculate the rectangle using Vision's coordinate system to image coordinates.
+    let correctedRect = VNImageRectForNormalizedRect(visionRect, Int(imageSize.width), Int(imageSize.height))
+    
+    // Draw the vision rectangle with a red fill and stroke.
+    UIColor.red.withAlphaComponent(0.3).setFill()
+    let rectPath = UIBezierPath(rect: correctedRect)
+    rectPath.fill()
+    
+    UIColor.red.setStroke()
+    rectPath.lineWidth = 2.0
+    rectPath.stroke()
+    
+    // Get the resulting image from the current context.
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    
+    // End the image context to free up resources.
+    UIGraphicsEndImageContext()
+    
+    // Adjust the image's orientation before returning.
+    guard let finalCgImage = newImage?.cgImage else {
+      return nil
+    }
+    
+    let correctlyOrientedImage = UIImage(
+      cgImage: finalCgImage,
+      scale: self.scale,
+      orientation: self.adjustOrientation()
+    )
+    logger.debug("Final image needs an orientation of \(correctlyOrientedImage.imageOrientation.rawValue) to look right.")
+    return correctlyOrientedImage
+  }
+  
+  /// Adjusts the orientation of the image based on its current orientation.
+  ///
+  /// This method is private and only accessible within the extension to ensure that it is only used internally.
+  ///
+  /// - Returns: The adjusted orientation that is the mirrored counterpart of the image's current orientation.
+  private func adjustOrientation() -> UIImage.Orientation {
+    switch self.imageOrientation {
+    case .up:
+      return .downMirrored
+    case .upMirrored:
+      return .up
+    case .down:
+      return .upMirrored
+    case .downMirrored:
+      return .down
+    case .left:
+      return .rightMirrored
+    case .rightMirrored:
+      return .left
+    case .right:
+      return .leftMirrored
+    case .leftMirrored:
+      return .right
+    @unknown default:
+      return self.imageOrientation
+    }
+  }
 }
-
