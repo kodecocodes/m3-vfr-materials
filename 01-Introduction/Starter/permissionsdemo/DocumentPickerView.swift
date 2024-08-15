@@ -31,18 +31,16 @@
 /// THE SOFTWARE.
 
 import SwiftUI
-
-import SwiftUI
 import UIKit
 
 // This struct defines the main view for the document picker functionality.
 struct DocumentPickerView: View {
   // State variable to control the presentation of the document picker sheet.
   @State private var showDocumentPicker = false
-
+  
   // State variable to hold the selected image from the document picker.
   @State private var selectedImage: UIImage?
-
+  
   // The body property defines the UI layout for this view.
   var body: some View {
     VStack {
@@ -57,7 +55,7 @@ struct DocumentPickerView: View {
         // If no image is selected, display a placeholder text.
         Text("No image selected")
       }
-
+      
       // A button that triggers the document picker.
       Button(action: {
         // Set showDocumentPicker to true to present the document picker sheet.

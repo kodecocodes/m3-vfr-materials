@@ -39,7 +39,7 @@ class PhotoPickerViewModel: ObservableObject {
   // Published property to store the selected image.
   // When this property changes, the view will automatically update.
   @Published var selectedImage: UIImage?
-
+  
   // Published property to store the selected PhotosPickerItem.
   // When this property is set, it triggers the image loading process.
   @Published var selectedPickerItem: PhotosPickerItem? {
@@ -50,7 +50,7 @@ class PhotoPickerViewModel: ObservableObject {
       }
     }
   }
-
+  
   // Private function to load the image from the selected PhotosPickerItem.
   // This method is called whenever the selectedPickerItem property is set.
   private func loadImage(from item: PhotosPickerItem) {
@@ -80,7 +80,7 @@ class PhotoPickerViewModel: ObservableObject {
 struct PhotoPickerView: View {
   // StateObject to manage the view model, which contains the business logic for the view.
   @StateObject private var viewModel = PhotoPickerViewModel()
-
+  
   // The body property defines the UI layout for this view.
   var body: some View {
     VStack {
@@ -95,7 +95,7 @@ struct PhotoPickerView: View {
         // If no image is selected, display a placeholder text.
         Text("No image selected")
       }
-
+      
       // Use PhotosPicker for selecting a photo from the photo library.
       PhotosPicker(
         selection: $viewModel.selectedPickerItem, // Binding to the selected PhotosPickerItem

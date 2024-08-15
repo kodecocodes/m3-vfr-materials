@@ -40,34 +40,34 @@ struct DocumentPicker: UIViewControllerRepresentable {
   class Coordinator: NSObject, UIDocumentPickerDelegate {
     // A reference to the parent DocumentPicker struct.
     var parent: DocumentPicker
-
+    
     // Initializer to set up the coordinator with a reference to the parent.
     init(parent: DocumentPicker) {
       self.parent = parent
     }
-
+    
     // This method is called when the user selects a document.
     func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
       // Safely unwrap the first URL from the array of selected documents.
       guard let selectedFileURL = urls.first else { return }
-
+      
       do {
         // Get the user's document directory.
         let documentDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-
+        
         // Create the destination URL by appending the file name to the document directory path.
         let destinationURL = documentDirectory.appendingPathComponent(selectedFileURL.lastPathComponent)
-
+        
         // Check if a file with the same name already exists at the destination.
         if FileManager.default.fileExists(atPath: destinationURL.path) {
           // If it exists, remove the existing file to avoid conflicts.
           try FileManager.default.removeItem(at: destinationURL)
         }
-
+        
         // Copy the selected file to the destination URL.
         try FileManager.default.copyItem(at: selectedFileURL, to: destinationURL)
         print("File copied to \(destinationURL)")
-
+        
         // Attempt to load the copied file as a UIImage and assign it to the parent's selectedImage binding.
         parent.selectedImage = UIImage(contentsOfFile: destinationURL.path)
       } catch {
@@ -76,29 +76,27 @@ struct DocumentPicker: UIViewControllerRepresentable {
       }
     }
   }
-
+  
   // A binding to the selectedImage, allowing the parent view to update when an image is selected.
   @Binding var selectedImage: UIImage?
-
+  
   // This method creates an instance of the Coordinator class, linking it with the DocumentPicker.
   func makeCoordinator() -> Coordinator {
     Coordinator(parent: self)
   }
-
+  
   // This method creates and configures the UIDocumentPickerViewController.
   func makeUIViewController(context: Context) -> UIDocumentPickerViewController {
     // Create a document picker that can open JPEG and PNG files.
     let documentPicker = UIDocumentPickerViewController(forOpeningContentTypes: [UTType.jpeg, UTType.png])
-
+    
     // Set the coordinator as the delegate to handle the document picking process.
     documentPicker.delegate = context.coordinator
     return documentPicker
   }
-
+  
   // This method allows for updates to the UIDocumentPickerViewController, but is not used in this case.
   func updateUIViewController(_ uiViewController: UIDocumentPickerViewController, context: Context) {
     // No updates are needed for this view controller in this example.
   }
 }
-
-

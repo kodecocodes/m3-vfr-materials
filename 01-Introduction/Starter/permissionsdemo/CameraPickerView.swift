@@ -30,7 +30,6 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-
 import SwiftUI
 import AVFoundation
 
@@ -39,17 +38,17 @@ class CameraViewModel: ObservableObject {
   // Published properties that notify the view when they change.
   @Published var capturedImage: UIImage? // Stores the captured image.
   @Published var cameraPermissionStatus: AVAuthorizationStatus = .notDetermined // Tracks the camera permission status.
-
+  
   // Initializer that checks the camera permissions when the view model is created.
   init() {
     checkCameraPermissions()
   }
-
+  
   // Function to check the current camera permissions.
   func checkCameraPermissions() {
     //Code goes here
   }
-
+  
   // Function to request camera permissions from the user.
   func requestCameraPermissions() {
     //Code goes here
@@ -60,10 +59,10 @@ class CameraViewModel: ObservableObject {
 struct CameraView: View {
   // The view model is used to manage state and business logic for the view.
   @StateObject private var viewModel = CameraViewModel()
-
+  
   // State to control the presentation of the camera picker.
   @State private var showCameraPicker = false
-
+  
   // The body property defines the UI layout for this view.
   var body: some View {
     VStack {
@@ -78,10 +77,10 @@ struct CameraView: View {
         // If no image is captured, display a placeholder text.
         Text("No image captured")
       }
-
+      
       // A button that triggers the camera or requests permissions.
       Button(action: {
-          showCameraPicker = true
+        showCameraPicker = true
       }) {
         // The appearance and styling of the button.
         Text("Capture Photo")
@@ -95,7 +94,7 @@ struct CameraView: View {
         // Pass the capturedImage binding to the CameraPicker so it can update the selected image.
         CameraPicker(selectedImage: $viewModel.capturedImage)
       }
-
+      
       // Display a message about the camera permission status.
       Text(permissionMessage)
         .padding()
@@ -105,7 +104,7 @@ struct CameraView: View {
       viewModel.checkCameraPermissions()
     }
   }
-
+  
   // A computed property that returns a message based on the camera permission status.
   private var permissionMessage: String {
     switch viewModel.cameraPermissionStatus {
@@ -120,7 +119,6 @@ struct CameraView: View {
     }
   }
 }
-
 
 #Preview {
   CameraView()
