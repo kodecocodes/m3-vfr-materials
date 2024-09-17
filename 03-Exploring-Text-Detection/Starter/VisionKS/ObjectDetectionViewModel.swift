@@ -82,3 +82,4 @@ class ObjectDetectionViewModel: ObservableObject {
     }
   }
 }
+

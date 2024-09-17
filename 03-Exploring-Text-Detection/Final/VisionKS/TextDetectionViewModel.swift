@@ -57,12 +57,8 @@ class TextDetectionViewModel: ObservableObject {
         print("Text detection error: \(error)")
         return
       }
-      
-      self?.textRectangles = request.results?.compactMap {
-        guard let observation = $0 as? VNRecognizedTextObservation,
-              let topCandidate = observation.topCandidates(1).first else { return nil }
-        return (observation.boundingBox, topCandidate.string)
-      } ?? []
+      self?.textRectangles = []
+      //Process the observations
     }
     
     textDetectionRequest.recognitionLevel = .accurate
@@ -70,18 +66,19 @@ class TextDetectionViewModel: ObservableObject {
     textDetectionRequest.usesCPUOnly = true
 #endif
     guard let cgImage = image.cgImage else { return }
-    
     let ciImage = CIImage(cgImage: cgImage)
+    
     // Step 1: Adjust Exposure
     let exposureAdjustFilter = CIFilter.exposureAdjust()
     exposureAdjustFilter.inputImage = ciImage
-    exposureAdjustFilter.ev = 2.5 // Adjust exposure value (EV) as needed, 1.0 is an example
-    guard let exposureAdjustedImage = exposureAdjustFilter.outputImage else { return }
+    exposureAdjustFilter.ev = 1.0
+    guard let exposureAdjustedImage = exposureAdjustFilter.outputImage
+      else { return }
     
     // Step 2: Increase Contrast
     let contrastAdjustFilter = CIFilter.colorControls()
     contrastAdjustFilter.inputImage = exposureAdjustedImage
-    contrastAdjustFilter.contrast = 4 // Increase contrast, 1.5 is an example, adjust as needed
+    contrastAdjustFilter.contrast = 4
     guard let processedImage = contrastAdjustFilter.outputImage else { return }
     
     let handler = VNImageRequestHandler(ciImage: processedImage, options: [:])
@@ -128,3 +125,4 @@ class TextDetectionViewModel: ObservableObject {
     print("Calculated max text height: \(self.maxTextHeight)")
   }
 }
+
