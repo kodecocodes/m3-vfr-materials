@@ -12,6 +12,8 @@
 		18D775C722AD944400AE281E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18D775C622AD944400AE281E /* Assets.xcassets */; };
 		18D775CA22AD944400AE281E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18D775C922AD944400AE281E /* Preview Assets.xcassets */; };
 		18D775D822AD963800AE281E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18D775DA22AD963800AE281E /* LaunchScreen.storyboard */; };
+		D4445CBC2C5A8DFD002CC20F /* TextDetectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4445CBB2C5A8DFD002CC20F /* TextDetectionView.swift */; };
+		D4445CBE2C5A8E64002CC20F /* TextDetectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4445CBD2C5A8E64002CC20F /* TextDetectionViewModel.swift */; };
 		D4445CC02C5A8E9D002CC20F /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4445CBF2C5A8E9D002CC20F /* ImageViewModel.swift */; };
 		D4445CC22C5ADA63002CC20F /* ObjectDetectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4445CC12C5ADA63002CC20F /* ObjectDetectionViewModel.swift */; };
 		D4445CC42C5ADAA0002CC20F /* ObjectDetectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4445CC32C5ADAA0002CC20F /* ObjectDetectionView.swift */; };
@@ -27,6 +29,8 @@
 		18D775C922AD944400AE281E /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		18D775CE22AD944400AE281E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18D775DE22AD96B400AE281E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		D4445CBB2C5A8DFD002CC20F /* TextDetectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDetectionView.swift; sourceTree = "<group>"; };
+		D4445CBD2C5A8E64002CC20F /* TextDetectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextDetectionViewModel.swift; sourceTree = "<group>"; };
 		D4445CBF2C5A8E9D002CC20F /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
 		D4445CC12C5ADA63002CC20F /* ObjectDetectionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectDetectionViewModel.swift; sourceTree = "<group>"; };
 		D4445CC32C5ADAA0002CC20F /* ObjectDetectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObjectDetectionView.swift; sourceTree = "<group>"; };
@@ -67,6 +71,8 @@
 			isa = PBXGroup;
 			children = (
 				1839F4AF25190F2A00BB00F1 /* AppMain.swift */,
+				D4445CBB2C5A8DFD002CC20F /* TextDetectionView.swift */,
+				D4445CBD2C5A8E64002CC20F /* TextDetectionViewModel.swift */,
 				D4445CBF2C5A8E9D002CC20F /* ImageViewModel.swift */,
 				18D775C422AD944300AE281E /* FacesView.swift */,
 				D4445CC12C5ADA63002CC20F /* ObjectDetectionViewModel.swift */,
@@ -118,7 +124,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1100;
-				LastUpgradeCheck = 1540;
+				LastUpgradeCheck = 1600;
 				ORGANIZATIONNAME = Kodeco;
 				TargetAttributes = {
 					18D775BC22AD944300AE281E = {
@@ -185,6 +191,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D4E2108E2C66C43F0087EFB7 /* UIImage+Helpers.swift in Sources */,
+				D4445CBE2C5A8E64002CC20F /* TextDetectionViewModel.swift in Sources */,
+				D4445CBC2C5A8DFD002CC20F /* TextDetectionView.swift in Sources */,
 				18D775C522AD944300AE281E /* FacesView.swift in Sources */,
 				D4E210B42C66D17E0087EFB7 /* PhotoPickerViewModel.swift in Sources */,
 				D4445CC02C5A8E9D002CC20F /* ImageViewModel.swift in Sources */,
@@ -212,6 +220,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -274,6 +283,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

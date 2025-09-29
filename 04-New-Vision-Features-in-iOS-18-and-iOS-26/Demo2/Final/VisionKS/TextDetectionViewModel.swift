@@ -35,100 +35,117 @@ import Vision
 import CoreImage
 import CoreImage.CIFilterBuiltins
 
+enum RecognitionError: Error {
+    case documentNotAvailable
+    case noElementExists
+}
+
 class TextDetectionViewModel: ObservableObject {
   @Published var textRectangles: [(CGRect, String)] = []
   @Published var currentIndex: Int = 0
   @Published var maxTextHeight: CGFloat = 0
-  
+
   // Shared PhotoPickerViewModel
   @Published var photoPickerViewModel: PhotoPickerViewModel
-  
+
   init(photoPickerViewModel: PhotoPickerViewModel) {
     self.photoPickerViewModel = photoPickerViewModel
   }
-  
-  @MainActor func detectText() {
+
+  @MainActor func detectText() async {
     currentIndex = 0
-    
+
     guard let image = photoPickerViewModel.selectedPhoto?.image else { return }
-    
-    let textDetectionRequest = VNRecognizeTextRequest { [weak self] request, error in
-      if let error = error {
-        print("Text detection error: \(error)")
-        return
-      }
 
-      //Process the observations
-      self?.textRectangles = request.results?.compactMap {
-        guard let observation = $0 as? VNRecognizedTextObservation,
-              let topCandidate = observation.topCandidates(1).first else { return nil }
-        return (observation.boundingBox, topCandidate.string)
-      } ?? []
+    let textDetectionRequest = RecognizeDocumentsRequest()
 
-    }
-    
-    textDetectionRequest.recognitionLevel = .accurate
-#if targetEnvironment(simulator)
-    textDetectionRequest.usesCPUOnly = true
-#endif
     guard let cgImage = image.cgImage else { return }
+
     let ciImage = CIImage(cgImage: cgImage)
-    
     // Step 1: Adjust Exposure
     let exposureAdjustFilter = CIFilter.exposureAdjust()
     exposureAdjustFilter.inputImage = ciImage
-    exposureAdjustFilter.ev = 1.0
-    guard let exposureAdjustedImage = exposureAdjustFilter.outputImage
-      else { return }
-    
+    exposureAdjustFilter.ev = 1.0 // Adjust exposure value (EV) as needed, 1.0 is an example
+    guard let exposureAdjustedImage = exposureAdjustFilter.outputImage else { return }
+
     // Step 2: Increase Contrast
     let contrastAdjustFilter = CIFilter.colorControls()
     contrastAdjustFilter.inputImage = exposureAdjustedImage
-    contrastAdjustFilter.contrast = 4
+    contrastAdjustFilter.contrast = 1.5 // Increase contrast, 1.5 is an example, adjust as needed
     guard let processedImage = contrastAdjustFilter.outputImage else { return }
     
-    let handler = VNImageRequestHandler(ciImage: processedImage, options: [:])
-    
     do {
-      try handler.perform([textDetectionRequest])
+    
+      // Perform the request on the image data and return the results.
+      let observations = try await textDetectionRequest.perform(on: UIImage(ciImage: processedImage).pngData()!)
+
+      // Get the first observation
+      guard let document = observations.first?.document else {
+          throw RecognitionError.documentNotAvailable
+      }
+
+      for paragraph in document.paragraphs {
+        textRectangles.append((paragraph.boundingRegion.boundingBox.cgRect, paragraph.transcript))
+      }
+     
+      var detectedEmail = ""
+      var detectedPhone = ""
+      var detectedAddress = ""
+      
+      //loop through the observations
+      for result in observations {
+        for detectedData in result.document.text.detectedData
+        {
+          switch detectedData.match.details {
+          case .emailAddress(let email):
+            detectedEmail = email.emailAddress
+            print("detected email \(detectedEmail)")
+          case .phoneNumber(let phoneNumber):
+            detectedPhone = phoneNumber.phoneNumber
+            print("detected phone number \(detectedPhone)")
+          case .postalAddress(let address):
+            detectedAddress = address.fullAddress
+            print("detected address \(detectedAddress)")
+          default:
+              break
+          }
+        }
+      }
+      
     } catch {
       print("Failed to perform detection: \(error)")
     }
   }
-  
+
   func nextText() {
     if textRectangles.isEmpty { return }
     currentIndex = (currentIndex + 1) % textRectangles.count
   }
-  
+
   func previousText() {
     if textRectangles.isEmpty { return }
     currentIndex = (currentIndex - 1 + textRectangles.count) % textRectangles.count
   }
-  
+
   var currentText: (CGRect, String)? {
     guard !textRectangles.isEmpty else { return nil }
     return textRectangles[currentIndex]
   }
-  
+
   func calculateMaxTextHeight() {
     // Extract all the text strings from textRectangles
     let texts = textRectangles.map { $0.1 }
-    
+
     // This function calculates the max height for the texts
     let maxWidth = UIScreen.main.bounds.width - 32 // Assuming 16pt padding on each side
     let font = UIFont.systemFont(ofSize: 17)
-    
+
     let maxHeight = texts.map { text -> CGFloat in
       let constraintRect = CGSize(width: maxWidth, height: .greatestFiniteMagnitude)
       let boundingBox = text.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
-      print("Text: \(text)")
-      print("Bounding box height: \(boundingBox.height)")
       return boundingBox.height
     }.max() ?? 0
-    
+
     self.maxTextHeight = maxHeight + 32 // Add padding
-    print("Calculated max text height: \(self.maxTextHeight)")
   }
 }
-
