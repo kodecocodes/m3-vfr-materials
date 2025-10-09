@@ -4,7 +4,7 @@
 
 This repo contains all the downloadable materials and projects associated with the [Vision Framework](https://www.kodeco.com/ios/paths/apple-ai-models/49307523-vision-framework) module from [Kodeco](https://www.kodeco.com).
 
-- This moxuld is part of [Apple Intelligence Program](https://www.kodeco.com/ios/programs/apple-intelligence), which you can take as either on-demand or live bootcamp/
+- This module is part of [Apple Intelligence Program](https://www.kodeco.com/ios/programs/apple-intelligence), which you can take as either on-demand or live bootcamp.
 
 --- 
 
